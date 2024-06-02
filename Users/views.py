@@ -142,6 +142,9 @@ class ChangePasswordView(GenericAPIView):
                 "password": new_password
             }, status=status.HTTP_400_BAD_REQUEST)
         else:
+            user = self.request.user
+            user.set_password(new_password)
+            user.save()
             return Response({
                 "message": "Password changed successfully.",
                 "password": new_password
