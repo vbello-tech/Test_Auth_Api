@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5437:5432'
+  web:
+    build: .
+    container_name: test_auth_api
+    volumes:
+      - .:/test_auth_api
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
